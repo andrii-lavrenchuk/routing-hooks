@@ -23,7 +23,7 @@ function App() {
           <BooksView />
         </Route>
 
-        <Route path="/books/:bookId">
+        <Route path="/books/:slug">
           <BooksDetailView />
         </Route>
 

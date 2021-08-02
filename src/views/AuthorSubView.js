@@ -1,9 +1,11 @@
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useLocation } from 'react-router-dom';
+import makeSlug from '../slug/makeSlug';
 
 const AuthorSubView = ({ authors }) => {
-  const { authorId } = useParams();
+  const { slug } = useParams();
+  const authorId = slug.match(/[a-z0-9]+$/)[0];
   const id = Number(authorId);
-
+  const location = useLocation();
   const author = authors.find(author => id === author.id);
 
   return (
@@ -12,7 +14,14 @@ const AuthorSubView = ({ authors }) => {
       <ul>
         {author.books.map(book => (
           <li key={book.id}>
-            <Link to={`/books/${book.id}`}>{book.title}</Link>
+            <Link
+              to={{
+                pathname: `/books/${makeSlug(`${book.title} ${book.id}`)}`,
+                state: { from: location },
+              }}
+            >
+              {book.title}
+            </Link>
           </li>
         ))}
       </ul>

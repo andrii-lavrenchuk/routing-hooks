@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
-import { Link, useRouteMatch } from 'react-router-dom';
+import makeSlug from '../slug/makeSlug';
+import { Link, useRouteMatch, useLocation } from 'react-router-dom';
 import * as bookShelfAPI from '../services/bookshelf-api';
 import PageHeading from '../Components/PageHeading';
 
 const BooksView = () => {
   const [books, setBooks] = useState(null);
   const { url } = useRouteMatch();
+  const location = useLocation();
 
   useEffect(() => {
     bookShelfAPI.getBooks().then(setBooks);
@@ -18,7 +20,14 @@ const BooksView = () => {
         <ul>
           {books.map(book => (
             <li key={book.id}>
-              <Link to={`${url}/${book.id}`}>{book.title}</Link>
+              <Link
+                to={{
+                  pathname: `${url}/${makeSlug(`${book.title} ${book.id}`)}`,
+                  state: { from: location },
+                }}
+              >
+                {book.title}
+              </Link>
             </li>
           ))}
         </ul>
